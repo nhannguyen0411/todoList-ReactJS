@@ -14,8 +14,9 @@ class App extends Component {
   render(){
     return (
       <div className="App">
-        <TodoItem title="No way"/>
-        <TodoItem title="Come on now"/>
+        {
+          this.todoItems.map( item => <TodoItem title={ item } />)
+        }
       </div>
     );
   }
