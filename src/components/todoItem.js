@@ -3,7 +3,7 @@ import './todoItem.css';
 
 class TodoItem extends Component{
     render(){
-        
+
         const { item } = this.props;
         let className = 'TodoItem';
 
