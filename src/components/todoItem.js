@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import './todoItem.css';
 
 class TodoItem extends Component{
     render(){
-
-        const { item } = this.props;
-        let className = 'TodoItem';
-
-        if(item.isComplete){
-            className += ' TodoItem-done';
-        }
+        
+        const { item, onClick } = this.props;
 
         return (
-            <div className={className}>
+            <div onClick = {onClick} className={classNames('TodoItem', {
+                'TodoItem-done': item.isComplete
+            })}>
                 <p>{this.props.item.title}</p>
             </div>
         )

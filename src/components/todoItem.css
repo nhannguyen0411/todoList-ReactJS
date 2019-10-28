@@ -8,4 +8,5 @@
 .TodoItem-done {
     text-decoration: line-through;
     opacity: .3;
+    transition: all .2s;
 }
