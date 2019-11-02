@@ -35,6 +35,42 @@ class App extends Component {
     });
   }
 
+  onCheckAll(){
+    let checkTodo = this.state.todoItems.filter(item => { // lọc danh sách có bao nhiêu phần tử true
+      if(item.isComplete === true)
+        return true;
+      return false;
+    });
+    
+    let checkTrue = this.state.todoItems.find(item => { // tìm trong danh sách có isComplete = true ko, ko có trả về false
+      if(item.isComplete === true)
+        return 1;
+    });
+
+    if(checkTrue === undefined) {
+      checkTrue = false;
+    }
+
+    let stateCopy; 
+
+    if(checkTrue.isComplete === true || checkTrue) {
+      if(checkTodo.length === this.state.todoItems.length) 
+        stateCopy = this.state.todoItems.map( item => item.isComplete = false);
+      else 
+        stateCopy = this.state.todoItems.map( item => item.isComplete = true);
+    }
+    else {
+      if(checkTodo.length < 1) 
+        stateCopy = this.state.todoItems.map( item => item.isComplete = true);
+      else 
+        stateCopy = this.state.todoItems.map( item => item.isComplete = false);
+    }
+    
+    this.setState({
+      ...stateCopy
+    });
+  }
+
   onKeyUp(event) {
 
     if(event.keyCode === 13){
@@ -64,6 +100,132 @@ class App extends Component {
       newItem: text
     })
   }
+
+  // onCurrentFilter(currentState) {
+  //   return (event) => {
+  //     //let stateCopy = Object.assign({}, this.state);
+  //     const stateCopy = [...this.state.todoItems];
+  //     if(currentState === 'ALL') {
+  //       let stateAll = stateCopy;//[...stateCopy.todoItems];
+  //       this.setState({
+  //         currentFilter: 'ALL',
+  //         todoItems: [
+  //           ...stateAll
+  //         ]
+  //       })
+  //     }
+  //     else if(currentState === 'ACTIVE') {
+  //       // let stateActive = [...stateCopy.todoItems].filter( item => {
+  //       //   return item.isComplete === false;
+  //       // });
+  //       let stateActive = stateCopy.filter( item => {
+  //         return item.isComplete === false;
+  //       });
+  //       this.setState({
+  //         currentFilter: 'ACTIVE',
+  //         todoItems: [
+  //           ...stateActive
+  //         ]
+  //       })
+  //     }
+  //     else {
+  //       // let stateCompleted = [...stateCopy.todoItems].filter( item => {
+  //       //   return item.isComplete === true;
+  //       // });
+  //       let stateCompleted = stateCopy.filter( item => {
+  //         return item.isComplete === true;
+  //       });
+  //       this.setState({
+  //         currentFilter: 'COMPLETED',
+  //         todoItems: [
+  //           ...stateCompleted
+  //         ]
+  //       })
+  //     }
+  //   }
+    
+
+  //   // switch(currentState){
+  //   //   case 'ALL': {
+  //   //     let stateAll = [...stateCopy.todoItems]
+  //   //     this.setState({
+  //   //       currentFilter: 'ALL',
+  //   //       todoItems: [
+  //   //         ...stateAll
+  //   //       ]
+  //   //     });
+  //   //     break;
+  //   //   }
+
+  //   //   case 'ACTIVE': {
+  //   //     let stateActive = [...stateCopy.todoItems].filter( item => {
+  //   //       return item.isComplete === false;
+  //   //     });
+  //   //     this.setState({
+  //   //       currentFilter: 'ACTIVE',
+  //   //       todoItems: [
+  //   //         ...stateActive
+  //   //       ]
+  //   //     });
+  //   //     break;
+  //   //   }
+
+  //   //   case 'COMPLETED': {
+  //   //     let stateCompleted = [...stateCopy.todoItems].filter( item => {
+  //   //       return item.isComplete === true;
+  //   //     });
+  //   //     this.setState({
+  //   //       currentFilter: 'COMPLETED',
+  //   //       todoItems: [
+  //   //         ...stateCompleted
+  //   //       ]
+  //   //     });
+  //   //     break;
+  //   //   }
+
+  //   //   default: return;
+  //   // }
+
+    
+  // }
+
+  onCurrentFilter(currentState) {
+    return (event) => {
+      let { todoItems } = this.state;
+      if(currentState === 'ALL') {
+        this.setState({
+          currentFilter: 'ALL',
+          todoItems: [
+            ...todoItems
+          ]
+        })
+      }
+      else if(currentState === 'ACTIVE') {
+        let stateActive = todoItems.filter( item => {
+          return item.isComplete === false;
+        });
+        this.setState({
+          currentFilter: 'ACTIVE',
+          todoItems: [
+            ...stateActive
+          ]
+        })
+      }
+      else {
+        let stateCompleted = todoItems.filter( item => {
+          return item.isComplete === true;
+        });
+        this.setState({
+          currentFilter: 'COMPLETED',
+          todoItems: [
+            ...stateCompleted
+          ]
+        })
+      }
+    }
+  }
+
+
 
   render(){
     let { todoItems, newItem, currentFilter, clearCompleted } = this.state;

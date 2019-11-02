@@ -27,6 +27,37 @@
   outline: none;
 }
 
+.App .Footer {
+  display: flex;
+  padding: 10px 5px;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  color: #999;
+  justify-content: space-between;
+}
+
+.App .Footer .state-middle {
+  margin: auto
+}
+
+.App .Footer .state-middle span{
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 2px 5px;
+}
+
+.App .Footer .state-middle span.active, span:hover{
+  border: 1px solid #BBB;
+}
+
+.App .Footer .clear-completed {
+  display: none;
+}
+
+.App .Footer .clear-completed.active {
+  display: block;
+}
+
 .App-logo {
   height: 40vmin;
 }
