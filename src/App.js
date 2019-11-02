@@ -8,8 +8,17 @@ import list from './img/list.svg';
 class App extends Component {
   constructor(){
     super();
+    
+    this.array = [
+      {title: 'Đi ngủ', isComplete: false},
+      {title: 'Đi tắm', isComplete: false},
+      {title: 'Đi ăn', isComplete: false},
+      {title: 'Đi chơi', isComplete: false}
+    ];
+
     this.state = {
       newItem: '',
+      total: 0,
       currentFilter: "ALL",
       clearCompleted: false,
       todoItems: [
@@ -18,7 +27,6 @@ class App extends Component {
         {title: 'Đi ăn', isComplete: false},
         {title: 'Đi chơi', isComplete: false}
     ]};
-
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCheckAll = this.onCheckAll.bind(this);
@@ -27,8 +35,10 @@ class App extends Component {
   onItemClicked(index) {
     let stateCopy = Object.assign({}, this.state);
     stateCopy.todoItems[index].isComplete = !this.state.todoItems[index].isComplete;
+    let sum = [...stateCopy.todoItems].filter(item => item.isComplete === true);
     this.setState({
       //clearCompleted: !stateCopy.clearCompleted,
+      total: sum.length,
       todoItems: [
         ...stateCopy.todoItems
       ]
@@ -37,14 +47,11 @@ class App extends Component {
 
   onCheckAll(){
     let checkTodo = this.state.todoItems.filter(item => { // lọc danh sách có bao nhiêu phần tử true
-      if(item.isComplete === true)
-        return true;
-      return false;
+      return item.isComplete === true;
     });
     
     let checkTrue = this.state.todoItems.find(item => { // tìm trong danh sách có isComplete = true ko, ko có trả về false
-      if(item.isComplete === true)
-        return 1;
+      return item.isComplete === true;
     });
 
     if(checkTrue === undefined) {
@@ -52,22 +59,45 @@ class App extends Component {
     }
 
     let stateCopy; 
-
+    let sum;
     if(checkTrue.isComplete === true || checkTrue) {
-      if(checkTodo.length === this.state.todoItems.length) 
-        stateCopy = this.state.todoItems.map( item => item.isComplete = false);
-      else 
-        stateCopy = this.state.todoItems.map( item => item.isComplete = true);
+      if(checkTodo.length === this.state.todoItems.length) {
+        stateCopy = this.state.todoItems.map( item => {
+          item.isComplete = false;
+          return item;
+        });
+        sum = 0;
+      }
+      else {
+        stateCopy = this.state.todoItems.map( item => {
+          item.isComplete = true;
+          return item;
+        });
+        sum = this.state.todoItems.length;
+      }
     }
     else {
-      if(checkTodo.length < 1) 
-        stateCopy = this.state.todoItems.map( item => item.isComplete = true);
-      else 
-        stateCopy = this.state.todoItems.map( item => item.isComplete = false);
+      if(checkTodo.length < 1) {
+        stateCopy = this.state.todoItems.map( item => {
+          item.isComplete = true;
+          return item;
+        });
+        sum = this.state.todoItems.length;
+      }
+      else{
+        this.state.todoItems.map( item => {
+          item.isComplete = false;
+          return item;
+        });
+        sum = 0;
+      }
     }
     
     this.setState({
-      ...stateCopy
+      total: sum,
+      todoItems: [
+        ...stateCopy
+      ]
     });
   }
 
@@ -101,107 +131,19 @@ class App extends Component {
     })
   }
 
-  // onCurrentFilter(currentState) {
-  //   return (event) => {
-  //     //let stateCopy = Object.assign({}, this.state);
-  //     const stateCopy = [...this.state.todoItems];
-  //     if(currentState === 'ALL') {
-  //       let stateAll = stateCopy;//[...stateCopy.todoItems];
-  //       this.setState({
-  //         currentFilter: 'ALL',
-  //         todoItems: [
-  //           ...stateAll
-  //         ]
-  //       })
-  //     }
-  //     else if(currentState === 'ACTIVE') {
-  //       // let stateActive = [...stateCopy.todoItems].filter( item => {
-  //       //   return item.isComplete === false;
-  //       // });
-  //       let stateActive = stateCopy.filter( item => {
-  //         return item.isComplete === false;
-  //       });
-  //       this.setState({
-  //         currentFilter: 'ACTIVE',
-  //         todoItems: [
-  //           ...stateActive
-  //         ]
-  //       })
-  //     }
-  //     else {
-  //       // let stateCompleted = [...stateCopy.todoItems].filter( item => {
-  //       //   return item.isComplete === true;
-  //       // });
-  //       let stateCompleted = stateCopy.filter( item => {
-  //         return item.isComplete === true;
-  //       });
-  //       this.setState({
-  //         currentFilter: 'COMPLETED',
-  //         todoItems: [
-  //           ...stateCompleted
-  //         ]
-  //       })
-  //     }
-  //   }
-    
-
-  //   // switch(currentState){
-  //   //   case 'ALL': {
-  //   //     let stateAll = [...stateCopy.todoItems]
-  //   //     this.setState({
-  //   //       currentFilter: 'ALL',
-  //   //       todoItems: [
-  //   //         ...stateAll
-  //   //       ]
-  //   //     });
-  //   //     break;
-  //   //   }
-
-  //   //   case 'ACTIVE': {
-  //   //     let stateActive = [...stateCopy.todoItems].filter( item => {
-  //   //       return item.isComplete === false;
-  //   //     });
-  //   //     this.setState({
-  //   //       currentFilter: 'ACTIVE',
-  //   //       todoItems: [
-  //   //         ...stateActive
-  //   //       ]
-  //   //     });
-  //   //     break;
-  //   //   }
-
-  //   //   case 'COMPLETED': {
-  //   //     let stateCompleted = [...stateCopy.todoItems].filter( item => {
-  //   //       return item.isComplete === true;
-  //   //     });
-  //   //     this.setState({
-  //   //       currentFilter: 'COMPLETED',
-  //   //       todoItems: [
-  //   //         ...stateCompleted
-  //   //       ]
-  //   //     });
-  //   //     break;
-  //   //   }
-
-  //   //   default: return;
-  //   // }
-
-    
-  // }
-
   onCurrentFilter(currentState) {
     return (event) => {
-      let { todoItems } = this.state;
+      const newArr = [...this.array];
       if(currentState === 'ALL') {
         this.setState({
           currentFilter: 'ALL',
           todoItems: [
-            ...todoItems
+            ...newArr
           ]
         })
       }
       else if(currentState === 'ACTIVE') {
-        let stateActive = todoItems.filter( item => {
+        let stateActive = newArr.filter( item => {
           return item.isComplete === false;
         });
         this.setState({
@@ -212,7 +154,7 @@ class App extends Component {
         })
       }
       else {
-        let stateCompleted = todoItems.filter( item => {
+        let stateCompleted = newArr.filter( item => {
           return item.isComplete === true;
         });
         this.setState({
@@ -225,10 +167,8 @@ class App extends Component {
     }
   }
 
-
-
   render(){
-    let { todoItems, newItem, currentFilter, clearCompleted } = this.state;
+    let { todoItems, newItem, currentFilter, clearCompleted, total } = this.state;
     console.log('rendering...', todoItems);
     return (
       <div className="App">
@@ -249,7 +189,7 @@ class App extends Component {
         }
         
         <div className='Footer'>
-          <div>Item left</div>
+          <div>{todoItems.length - total} Item left</div>
           <div className='state-middle'>
 
             <span onClick={this.onCurrentFilter('ALL')} className={classNames({
