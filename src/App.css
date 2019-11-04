@@ -50,14 +50,6 @@
   border: 1px solid #BBB;
 }
 
-.App .Footer .clear-completed {
-  display: none;
-}
-
-.App .Footer .clear-completed.active {
-  display: block;
-}
-
 .App-logo {
   height: 40vmin;
 }

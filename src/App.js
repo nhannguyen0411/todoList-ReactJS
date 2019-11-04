@@ -9,12 +9,12 @@ class App extends Component {
   constructor(){
     super();
     
-    this.array = [
-      {title: 'Đi ngủ', isComplete: false},
-      {title: 'Đi tắm', isComplete: false},
-      {title: 'Đi ăn', isComplete: false},
-      {title: 'Đi chơi', isComplete: false}
-    ];
+    // this.array = [
+    //   {title: 'Đi ngủ', isComplete: false},
+    //   {title: 'Đi tắm', isComplete: false},
+    //   {title: 'Đi ăn', isComplete: false},
+    //   {title: 'Đi chơi', isComplete: false}
+    // ];
 
     this.state = {
       newItem: '',
@@ -27,9 +27,13 @@ class App extends Component {
         {title: 'Đi ăn', isComplete: false},
         {title: 'Đi chơi', isComplete: false}
     ]};
+
+    this.array = [...this.state.todoItems];
+
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCheckAll = this.onCheckAll.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   onItemClicked(index) {
@@ -37,7 +41,6 @@ class App extends Component {
     stateCopy.todoItems[index].isComplete = !this.state.todoItems[index].isComplete;
     let sum = [...stateCopy.todoItems].filter(item => item.isComplete === true);
     this.setState({
-      //clearCompleted: !stateCopy.clearCompleted,
       total: sum.length,
       todoItems: [
         ...stateCopy.todoItems
@@ -167,8 +170,19 @@ class App extends Component {
     }
   }
 
+  onDelete() {
+    // let stateCopy = [...this.state.todoItems].filter( item => item.isComplete === false);
+    // this.setState({
+    //   total: this.state.todoItems.length - stateCopy.length,
+    //   todoItems: [
+    //     ...stateCopy
+    //   ]
+    // });
+    console.log('Hello');
+  }
+
   render(){
-    let { todoItems, newItem, currentFilter, clearCompleted, total } = this.state;
+    let { todoItems, newItem, currentFilter, total } = this.state;
     console.log('rendering...', todoItems);
     return (
       <div className="App">
@@ -189,7 +203,8 @@ class App extends Component {
         }
         
         <div className='Footer'>
-          <div>{todoItems.length - total} Item left</div>
+          { (todoItems.length - total) < 2 && <div>{todoItems.length - total} Item left</div>}
+          { (todoItems.length - total) > 1 && <div>{todoItems.length - total} Items left</div>}
           <div className='state-middle'>
 
             <span onClick={this.onCurrentFilter('ALL')} className={classNames({
@@ -205,9 +220,15 @@ class App extends Component {
             })}>Completed</span>
 
           </div>
-          <div className={classNames('clear-completed', {
+          {/* <div className={classNames('clear-completed', {
             active: clearCompleted
-          })}>Clear Completed</div>
+          })}>Clear Completed</div> */}
+          { total > 0 && <div onClick={this.onDelete} 
+                              className={classNames('clear-completed', {
+                              active: true
+          })}>
+            Clear Completed
+          </div>}
         </div>
       </div>
     );
