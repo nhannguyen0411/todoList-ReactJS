@@ -8,27 +8,15 @@ import list from './img/list.svg';
 class App extends Component {
   constructor(){
     super();
-    
-    // this.array = [
-    //   {title: 'Đi ngủ', isComplete: false},
-    //   {title: 'Đi tắm', isComplete: false},
-    //   {title: 'Đi ăn', isComplete: false},
-    //   {title: 'Đi chơi', isComplete: false}
-    // ];
 
     this.state = {
       newItem: '',
       total: 0,
       currentFilter: "ALL",
       clearCompleted: false,
-      todoItems: [
-        {title: 'Đi ngủ', isComplete: false},
-        {title: 'Đi tắm', isComplete: false},
-        {title: 'Đi ăn', isComplete: false},
-        {title: 'Đi chơi', isComplete: false}
-    ]};
-
-    this.array = [...this.state.todoItems];
+      todoItems: [],
+      array: []
+    };
 
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -41,7 +29,7 @@ class App extends Component {
     stateCopy.todoItems[index].isComplete = !this.state.todoItems[index].isComplete;
     let sum = [...stateCopy.todoItems].filter(item => item.isComplete === true);
     this.setState({
-      total: sum.length,
+      total: this.state.todoItems.length - sum.length,
       todoItems: [
         ...stateCopy.todoItems
       ]
@@ -115,13 +103,21 @@ class App extends Component {
   
       this.setState({
         newItem: '',
+        total: this.state.todoItems.length + 1,
         todoItems: [
           {
             title: text,
             isComplete: false
           },
           ...this.state.todoItems
-        ]
+        ],
+        array: [
+          {
+            title: text,
+            isComplete: false
+          },
+          ...this.state.array
+        ],
       })
     }
 
@@ -136,7 +132,7 @@ class App extends Component {
 
   onCurrentFilter(currentState) {
     return (event) => {
-      const newArr = [...this.array];
+      const newArr = [...this.state.array];
       if(currentState === 'ALL') {
         this.setState({
           currentFilter: 'ALL',
@@ -171,19 +167,21 @@ class App extends Component {
   }
 
   onDelete() {
-    // let stateCopy = [...this.state.todoItems].filter( item => item.isComplete === false);
-    // this.setState({
-    //   total: this.state.todoItems.length - stateCopy.length,
-    //   todoItems: [
-    //     ...stateCopy
-    //   ]
-    // });
-    console.log('Hello');
+    let stateCopy = [...this.state.todoItems].filter( item => item.isComplete === false);
+    this.setState({
+      total: this.state.todoItems.length - stateCopy.length,
+      todoItems: [
+        ...stateCopy
+      ],
+      array: [
+        ...stateCopy
+      ]
+    });
   }
 
   render(){
     let { todoItems, newItem, currentFilter, total } = this.state;
-    console.log('rendering...', todoItems);
+    let totalTrue = todoItems.filter(item => item.isComplete === true);
     return (
       <div className="App">
         <div className='Header'>
@@ -195,16 +193,19 @@ class App extends Component {
           onChange={this.onChange}/>
         </div>
         {
-          todoItems.map( (item, index) => 
+          todoItems.length > 0 && todoItems.map( (item, index) => 
             <TodoItem key={index} 
               item={ item } 
               onClick = {() => this.onItemClicked(index)} 
               />)
         }
+        {
+          todoItems.length < 1 && 'Nothing here'
+        }
         
         <div className='Footer'>
-          { (todoItems.length - total) < 2 && <div>{todoItems.length - total} Item left</div>}
-          { (todoItems.length - total) > 1 && <div>{todoItems.length - total} Items left</div>}
+          { total < 2 && <div>{total} Item left</div>}
+          { total > 1 && <div>{total} Items left</div>}
           <div className='state-middle'>
 
             <span onClick={this.onCurrentFilter('ALL')} className={classNames({
@@ -220,10 +221,7 @@ class App extends Component {
             })}>Completed</span>
 
           </div>
-          {/* <div className={classNames('clear-completed', {
-            active: clearCompleted
-          })}>Clear Completed</div> */}
-          { total > 0 && <div onClick={this.onDelete} 
+          { totalTrue.length > 0 && <div onClick={this.onDelete} 
                               className={classNames('clear-completed', {
                               active: true
           })}>

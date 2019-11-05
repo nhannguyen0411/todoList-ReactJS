@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
+    "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "reactstrap": "^8.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,5 +30,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Kibuto/todoList-ReactJS.git",
+  "author": "Nhan <nguyentrongnhanc8@gmail.com>",
+  "license": "MIT"
 }
